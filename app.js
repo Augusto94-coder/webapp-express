@@ -7,6 +7,8 @@ const errorServer = require("./middlewares/errorServer");
 // importiamo globalmente il middleware di gestione 404 per rotta inesistente
 const notFound = require("./middlewares/notFound");
 
+const movieRouter = require("./routers/movieRouter")
+
 
 
 // usiamo il middleware static di express (per rendere disponibile i file statici)
@@ -14,6 +16,8 @@ app.use(express.static('public'));
 
 // registro il body-parser per "application/json"
 app.use(express.json());
+
+app.use("/movies", movieRouter);
 
 // impostiamo la rotta di home
 app.get("/", (req, res) => {
