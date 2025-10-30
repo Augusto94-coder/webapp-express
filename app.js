@@ -2,6 +2,12 @@ const express = require("express")
 const app = express();
 const port = 3000;
 
+// importiamo globalmente il middleware di gestione errore server
+const errorServer = require("./middlewares/errorServer");
+// importiamo globalmente il middleware di gestione 404 per rotta inesistente
+const notFound = require("./middlewares/notFound");
+
+
 
 // usiamo il middleware static di express (per rendere disponibile i file statici)
 app.use(express.static('public'));
