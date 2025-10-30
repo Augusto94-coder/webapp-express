@@ -1,34 +1,33 @@
 const connection = require('../data/db');
 
-//  INDEX
+// INDEX
 function index(req, res) {
-    const sql = 'SELECT * FROM movies';
-
-    // aggiungiamo la connesione per la richiesta
-    connection.query(sql, (err, result) => {
-        // gestiamo errore server mysql
-        if (err) return res.status(500).json({ error: "Database error" })
-        // ritorniamo il risultato ottenuto
-        res.json(result);
-    });
+  const sql = 'SELECT * FROM movies';
+  connection.query(sql, (err, result) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+    return res.json(result);
+  });
 }
 
-//  SHOW
+// SHOW
 function show(req, res) {
-    const id = req.params.id;
+  const id = req.params.id;
+  const movieSql = 'SELECT * FROM movies WHERE id = ?';
+  const reviewSql = 'SELECT * FROM reviews WHERE movie_id = ?';
 
-    // prepariamo query per singolo libro
-    const movieSql = 'SELECT * FROM movies WHERE id = ?';
+  connection.query(movieSql, [id], (err, movieResult) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+    if (movieResult.length === 0) return res.status(404).json({ error: "Movie not found" });
 
-    // aggiungiamo la connesione per la richiesta
-    connection.query(movieSql, [id], (err, movieResult) => {
-        // gestiamo errore server mysql
-        if (err) return res.status(500).json({ error: "Database error" })
-        // gestiamo anche il 404
-        if (movieResult.length === 0) res.status(404).json({ error: "Book not found" })
-        // ritorniamo il risultato ottenuto
-        res.json(movieResult[0]);
+    const singleMovie = movieResult[0];
+
+    connection.query(reviewSql, [id], (err, reviewResult) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+
+      singleMovie.reviews = reviewResult;
+      return res.json(singleMovie); 
     });
+  });
 }
 
-module.exports = { index, show }
+module.exports = { index, show };
