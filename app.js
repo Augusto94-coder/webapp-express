@@ -7,7 +7,14 @@ const errorServer = require("./middlewares/errorServer");
 // importiamo globalmente il middleware di gestione 404 per rotta inesistente
 const notFound = require("./middlewares/notFound");
 
+// importiamo rotta
 const movieRouter = require("./routers/movieRouter")
+
+// importiamo CORS
+const cors = require("cors");
+
+
+app.use(cors({origin: process.env.FE_APP}));
 
 
 
