@@ -7,6 +7,10 @@ const errorServer = require("./middlewares/errorServer");
 // importiamo globalmente il middleware di gestione 404 per rotta inesistente
 const notFound = require("./middlewares/notFound");
 
+//Importo ImagePath
+
+const imagePath = require("./middlewares/ImagePath")
+
 // importiamo rotta
 const movieRouter = require("./routers/movieRouter")
 
@@ -24,10 +28,10 @@ app.use(express.static('public'));
 // registro il body-parser per "application/json"
 app.use(express.json());
 
-app.use("/movies", movieRouter);
+app.use("/api/movies", movieRouter);
 
 // impostiamo la rotta di home
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
     console.log("hai richiesto la rotta di index");
 
     res.send('<h1>Ecco la home della API della nostra libreria</h1>')
