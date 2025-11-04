@@ -18,7 +18,7 @@ const movieRouter = require("./routers/movieRouter")
 const cors = require("cors");
 
 
-app.use(cors({origin: process.env.FE_APP}));
+app.use(cors({origin: process.env.FE_APP}));  /* process.env.FE_APP http://localhost:5173*/
 
 
 

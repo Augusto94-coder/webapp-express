@@ -8,7 +8,7 @@ function index(req, res) {
     const movies = result.map((movie) => {
       return {
         ...movie,
-        image: req.imagePath +movie.image,
+        image: req.imagePath + movie.image,
       };
     });
     res.json(movies);
@@ -25,8 +25,8 @@ function show(req, res) {
     if (err) return res.status(500).json({ error: "Database error" });
     if (movieResult.length === 0) return res.status(404).json({ error: "Movie not found" });
 
-    const singleMovie = movieResult[0];
-    singleMovie.image = req.imagePath + movie.image;
+    const singleMovie = {...movieResult[0] };
+    singleMovie.image = req.imagePath + singleMovie.image;
 
     connection.query(reviewSql, [id], (err, reviewResult) => {
       if (err) return res.status(500).json({ error: "Database error" });
