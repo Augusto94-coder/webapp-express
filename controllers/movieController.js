@@ -5,7 +5,13 @@ function index(req, res) {
   const sql = 'SELECT * FROM movies';
   connection.query(sql, (err, result) => {
     if (err) return res.status(500).json({ error: "Database error" });
-    return res.json(result);
+    const movies = SpeechRecognitionResultList.map((movie) => {
+      return {
+        ...movie,
+        image: req.imagePath +movie.image,
+      };
+    });
+    res.json(movies);
   });
 }
 
@@ -20,6 +26,7 @@ function show(req, res) {
     if (movieResult.length === 0) return res.status(404).json({ error: "Movie not found" });
 
     const singleMovie = movieResult[0];
+    singleMovie.image = req.imagePath + movie.image;
 
     connection.query(reviewSql, [id], (err, reviewResult) => {
       if (err) return res.status(500).json({ error: "Database error" });
