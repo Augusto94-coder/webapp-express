@@ -28,7 +28,9 @@ app.use(express.static('public'));
 // registro il body-parser per "application/json"
 app.use(express.json());
 
-app.use("/api/movies", movieRouter);
+app.use(imagePath);
+
+app.use("/api/movie", movieRouter);
 
 // impostiamo la rotta di home
 app.get("/api", (req, res) => {

@@ -5,7 +5,7 @@ function index(req, res) {
   const sql = 'SELECT * FROM movies';
   connection.query(sql, (err, result) => {
     if (err) return res.status(500).json({ error: "Database error" });
-    const movies = SpeechRecognitionResultList.map((movie) => {
+    const movies = result.map((movie) => {
       return {
         ...movie,
         image: req.imagePath +movie.image,
