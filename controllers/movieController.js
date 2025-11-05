@@ -18,7 +18,14 @@ function index(req, res) {
 // SHOW
 function show(req, res) {
   const id = req.params.id;
-  const movieSql = 'SELECT * FROM movies WHERE id = ?';
+  /* const movieSql = 'SELECT * FROM movies WHERE id = ?'; */
+
+  const movieSql = `SELECT M.*, ROUND(AVG(R.vote)) AS average_vote
+    FROM movies M 
+    LEFT JOIN reviews R 
+    ON R.movie_id = M.id 
+    WHERE M.id = ?`
+
   const reviewSql = 'SELECT * FROM reviews WHERE movie_id = ?';
 
   connection.query(movieSql, [id], (err, movieResult) => {
@@ -32,6 +39,7 @@ function show(req, res) {
       if (err) return res.status(500).json({ error: "Database error" });
 
       singleMovie.reviews = reviewResult;
+      singleMovie.average_vote = parseInt(singleMovie.average_vote);
       return res.json(singleMovie); 
     });
   });
@@ -45,13 +53,13 @@ function storeReview(req, res) {
     const id = req.params.id;
 
     // recuperiamo i dati nel body
-    const { name, vote, abstract } = req.body;
+    const { name, vote, text } = req.body;
 
     // prepariamo la query per la chiamata al DB
-    const sql = 'INSERT INTO `reviews` (`name`, `vote`, `abstract`, `movie_id`) VALUES (?,?,?,?)';
+    const sql = 'INSERT INTO `reviews` (`name`, `vote`, `text`, `movie_id`) VALUES (?,?,?,?)';
 
     // eseguiamo la query (con check preventivo dei dati)
-    connection.query(sql, [name, vote, abstract, id], (err, result) => {
+    connection.query(sql, [name, vote, text, id], (err, result) => {
         // se c'è errore server DB
         if (err) return res.status(500).json({ error: 'Database queri failed' });
         // se va tutto bene
